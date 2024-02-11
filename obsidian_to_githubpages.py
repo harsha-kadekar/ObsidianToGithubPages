@@ -24,8 +24,8 @@ def post_processing(github_pages_repo_local):
                 shutil.move(os.path.join(root, file), os.path.join(github_pages_repo_local, str(post.metadata.get("title") + ".md").lower()))
 
 
-def generate_obyde_config_path(obsidian_local_vault, github_pages_repo_local):
-    blog_path = os.path.join(obsidian_local_vault, "Blog")
+def generate_obyde_config_path(obsidian_local_vault, github_pages_repo_local, blog_folder):
+    blog_path = os.path.join(obsidian_local_vault, blog_folder)
     conversion_yaml = {
             "vault": {
                     "path": blog_path,
@@ -54,17 +54,24 @@ def main():
             "--github_pages_repo_local",
             required=True
             )
+    cli.add_argument(
+            "--blog_folder",
+            required=False,
+            default="Blog"
+            )
 
     args = cli.parse_args()
 
     obsidian_local_vault = args.obsidian_local_vault
     github_pages_repo_local = args.github_pages_repo_local
+    blog_folder = args.blog_folder
 
     print("Going to start with following arguments")
     print("Obsidian Local Vault Location: " + obsidian_local_vault)
     print("Github pages local repository Location: " + github_pages_repo_local)
+    print("Blog Folder within Obsidian Vault: " + blog_folder)
 
-    generate_obyde_config_path(obsidian_local_vault, github_pages_repo_local)
+    generate_obyde_config_path(obsidian_local_vault, github_pages_repo_local, blog_folder)
     convert_obsidian_to_github_pages()
     post_processing(github_pages_repo_local)
 
